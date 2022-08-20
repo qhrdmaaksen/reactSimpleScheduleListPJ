@@ -1,11 +1,12 @@
-import {useState} from "react";
+import {useState, useCallback} from "react";
 
-const useHttp = (requestConfig, applyData) => {/*requestConfig : url 을 포함한 어떤 종류의 설정 사항도 포함할수 있는 객체가되어야함*/
+const useHttp = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState(null);
 
 	/*get,post 두 개의 요청을 동시 처리 가능한 커스텀 훅*/
-	const sendRequest = async () => {
+	const sendRequest = useCallback(async (requestConfig,applyData) => {/*requestConfig : url 을 포함한 어떤 종류의 설정 사항도 포함할수 있는 객체가되어야함
+	-커스텀 훅이 다루는 모든 데이터는 래핑된 함수에서 매개 변수로 받기때문에 커스텀훅은 더이상 의존성이 필요없다*/
 		setIsLoading(true);
 		setError(null);
 		try {
@@ -33,7 +34,8 @@ const useHttp = (requestConfig, applyData) => {/*requestConfig : url 을 포함�
 			setError(err.message || 'Something went wrong!');
 		}
 		setIsLoading(false);
-	};
+	}, []);
+
 	return {
 		isLoading,
 		error,
